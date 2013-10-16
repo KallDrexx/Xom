@@ -19,7 +19,11 @@ namespace Xom.Core
 
         private Node CreateNodesForType(Type type, ICollection<Node> foundNodes, bool isRoot = false)
         {
-            var node = new Node
+            var node = foundNodes.FirstOrDefault(x => x.Type == type);
+            if (node != null)
+                return node;
+
+            node = new Node
             {
                 Type = type,
                 IsRoot =  isRoot,
@@ -37,7 +41,7 @@ namespace Xom.Core
             foundNodes.Add(node);
 
             var childTypes = type.GetProperties()
-                                 .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlElementAttribute)))
+                                 .Where(PropertyIsChildElement)
                                  .Select(x => x.PropertyType);
 
             var childNodes = new List<NodeChild>();
@@ -84,6 +88,17 @@ namespace Xom.Core
                 }
             }
 
+
+            return true;
+        }
+
+        private bool PropertyIsChildElement(PropertyInfo property)
+        {
+            if (property.CustomAttributes.Any(x => x.AttributeType == typeof(XmlAttributeAttribute)))
+                return false;
+
+            if (property.CustomAttributes.Any(x => x.AttributeType == typeof (XmlIgnoreAttribute)))
+                return false;
 
             return true;
         }

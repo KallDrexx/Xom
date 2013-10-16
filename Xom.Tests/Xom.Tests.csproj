@@ -52,6 +52,10 @@
     <Compile Include="TestObjects\Attributes\SimpleAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueTypeAttributeNode.cs" />
+    <Compile Include="TestObjects\Nodes\IgnoredChildNode.cs" />
+    <Compile Include="TestObjects\Nodes\NodeWithAttribute.cs" />
+    <Compile Include="TestObjects\Nodes\NonAttributedNode.cs" />
+    <Compile Include="TestObjects\Nodes\SelfReferencingNode.cs" />
     <Compile Include="TestObjects\Nodes\SimpleElementChildNode.cs" />
     <Compile Include="TestObjects\Nodes\SingleNode.cs" />
     <Compile Include="XomReaderNodeTests.cs" />

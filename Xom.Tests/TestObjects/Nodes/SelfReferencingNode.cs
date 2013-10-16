@@ -7,9 +7,9 @@ using System.Xml.Serialization;
 
 namespace Xom.Tests.TestObjects.Nodes
 {
-    class SingleNode
+    class SelfReferencingNode
     {
         [XmlElement]
-        public SingleNode Child { get; set; }
+        public SelfReferencingNode Child { get; set; }
     }
 }

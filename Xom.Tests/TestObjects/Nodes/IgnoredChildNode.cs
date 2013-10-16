@@ -7,9 +7,9 @@ using System.Xml.Serialization;
 
 namespace Xom.Tests.TestObjects.Nodes
 {
-    class SingleNode
+    class IgnoredChildNode
     {
-        [XmlElement]
-        public SingleNode Child { get; set; }
+        [XmlIgnore]
+        public string Test { get; set; }
     }
 }
