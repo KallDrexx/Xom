@@ -11,9 +11,18 @@ namespace Xom.Core
     {
         public IEnumerable<Node> GenerateNodes(Type type)
         {
+            var nodes = new List<Node>();
+            CreateNodesForType(type, nodes, true);
+
+            return nodes.ToArray();
+        }
+
+        private Node CreateNodesForType(Type type, ICollection<Node> foundNodes, bool isRoot = false)
+        {
             var node = new Node
             {
                 Type = type,
+                IsRoot =  isRoot,
                 Attributes = type.GetProperties()
                                  .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
                                  .Select(x => new NodeAttribute
@@ -25,7 +34,27 @@ namespace Xom.Core
                                  .ToArray()
             };
 
-            return new[] {node};
+            foundNodes.Add(node);
+
+            var childTypes = type.GetProperties()
+                                 .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlElementAttribute)))
+                                 .Select(x => x.PropertyType);
+
+            var childNodes = new List<NodeChild>();
+            foreach (var childType in childTypes)
+            {
+                var childNode = CreateNodesForType(childType, foundNodes);
+                childNodes.Add(new NodeChild
+                {
+                    AvailableNodes = new Dictionary<string, Node>
+                    {
+                        {"", childNode}
+                    }
+                });
+            }
+
+            node.Children = childNodes;
+            return node;
         }
 
         private bool AttributeTypeRequired(PropertyInfo attributeProperty, Type containingType)

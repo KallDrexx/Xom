@@ -52,6 +52,8 @@
     <Compile Include="TestObjects\Attributes\SimpleAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueTypeAttributeNode.cs" />
+    <Compile Include="TestObjects\Nodes\SimpleElementChildNode.cs" />
+    <Compile Include="TestObjects\Nodes\SingleNode.cs" />
     <Compile Include="XomReaderNodeTests.cs" />
     <Compile Include="XomReaderAttributeTests.cs" />
   </ItemGroup>
