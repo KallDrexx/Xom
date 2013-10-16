@@ -52,7 +52,8 @@
     <Compile Include="TestObjects\Attributes\SimpleAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueTypeAttributeNode.cs" />
-    <Compile Include="XomReaderTests.cs" />
+    <Compile Include="XomReaderNodeTests.cs" />
+    <Compile Include="XomReaderAttributeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xom.Core\Xom.Core.csproj">
