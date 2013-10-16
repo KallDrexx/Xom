@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Xom.Tests.TestObjects
+namespace Xom.Tests.TestObjects.Attributes
 {
-    class SimpleAttributeNode
+    class ValueSpecifiedAttributeNode
     {
-        public string NonXmlAttribute { get; set; }
+        public bool TestValueSpecified { get; set; }
 
         [XmlAttribute]
-        public string TestAttribute { get; set; }
+        public int TestValue { get; set; }
     }
 }
