@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xom.Tests", "Xom.Tests\Xom.Tests.csproj", "{3526175B-0E7E-478B-8CD2-43DD75C9C30E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE227B42-09A2-4E1F-9975-04C83B18A51A}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xom.Core", "Xom.Core\Xom.Core.csproj", "{B334963F-071A-44B4-B05B-91D0ADA5F2FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3526175B-0E7E-478B-8CD2-43DD75C9C30E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3526175B-0E7E-478B-8CD2-43DD75C9C30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3526175B-0E7E-478B-8CD2-43DD75C9C30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3526175B-0E7E-478B-8CD2-43DD75C9C30E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B334963F-071A-44B4-B05B-91D0ADA5F2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B334963F-071A-44B4-B05B-91D0ADA5F2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B334963F-071A-44B4-B05B-91D0ADA5F2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B334963F-071A-44B4-B05B-91D0ADA5F2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
