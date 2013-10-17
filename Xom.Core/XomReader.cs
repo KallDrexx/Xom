@@ -55,7 +55,10 @@ namespace Xom.Core
                     IsCollection = typeof(IEnumerable).IsAssignableFrom(child.PropertyType),
                     AvailableNodes = new Dictionary<string, Node>
                     {
-                        {"", childNode}
+                        {
+                            GetNodeName(child), 
+                            childNode
+                        }
                     }
                 });
             }
@@ -118,6 +121,21 @@ namespace Xom.Core
             }
 
             return type;
+        }
+
+        private string GetNodeName(PropertyInfo property)
+        {
+            var attributes = property.GetCustomAttributes(false)
+                                     .ToDictionary(x => x.GetType().Name, x => x);
+
+            var xmlArrayAttribute = attributes.Where(x => x.Key == typeof (XmlArrayAttribute).Name)
+                                              .Select(x => x.Value as XmlArrayAttribute)
+                                              .FirstOrDefault();
+
+            if (xmlArrayAttribute != null && !string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
+                return xmlArrayAttribute.ElementName;
+
+            return property.Name;
         }
     }
 }

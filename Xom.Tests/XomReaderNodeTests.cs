@@ -181,5 +181,27 @@ namespace Xom.Tests
 
             Assert.AreEqual(typeof(int), child.AvailableNodes.First().Value.Type, "Child type was incorrect");
         }
+
+        [TestMethod]
+        public void Child_Node_Without_Explicit_Name_Is_Property_Name()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(SingleNode));
+            var root = nodes.First(x => x.Type == typeof(SingleNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual("Child", child.AvailableNodes.First().Key, "Child node's name was incorrect");
+        }
+
+        [TestMethod]
+        public void XmlArray_Child_Node_Name_Is_Explicitly_Stated_Name()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(ExplicitlyNamedXmlArrayNode));
+            var root = nodes.First(x => x.Type == typeof(ExplicitlyNamedXmlArrayNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual("Name", child.AvailableNodes.First().Key, "Child node's name was incorrect");
+        }
     }
 }
