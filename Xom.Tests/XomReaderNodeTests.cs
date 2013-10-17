@@ -105,5 +105,81 @@ namespace Xom.Tests
             Assert.IsNotNull(root.Children, "Root's children array was null");
             Assert.AreEqual(0, root.Children.Count(), "Root has an incorrect number of children");
         }
+
+        [TestMethod]
+        public void Child_Contains_Name_Of_Property_For_Parent()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(SingleNode));
+            var root = nodes.First(x => x.Type == typeof(SingleNode));
+
+            Assert.AreEqual("Child", root.Children.First().PropertyName, "Child's property name was incorrect");
+        }
+
+        [TestMethod]
+        public void XmlElement_Child_Is_Not_Marked_As_An_Array()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(SingleNode));
+            var root = nodes.First(x => x.Type == typeof(SingleNode));
+            var child = root.Children.First();
+
+            Assert.IsFalse(child.IsXmlArray, "XmlElement was incorrectly marked as an xml array");
+        }
+
+        [TestMethod]
+        public void XmlArray_Child_Is_Marked_As_An_Array()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(XmlArrayChildNode));
+            var root = nodes.First(x => x.Type == typeof(XmlArrayChildNode));
+            var child = root.Children.First();
+
+            Assert.IsTrue(child.IsXmlArray, "XmlArray was not marked as an xml array");
+        }
+
+        [TestMethod]
+        public void Non_Enumerables_Marked_As_Not_A_Collection()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(SingleNode));
+            var root = nodes.First(x => x.Type == typeof(SingleNode));
+            var child = root.Children.First();
+
+            Assert.IsFalse(child.IsCollection, "Child was incorrectly marked as a collection");
+        }
+
+        [TestMethod]
+        public void Enumerables_Are_Marked_As_Being_A_Collection()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(XmlArrayChildNode));
+            var root = nodes.First(x => x.Type == typeof(XmlArrayChildNode));
+            var child = root.Children.First();
+
+            Assert.IsTrue(child.IsCollection, "Child was marked as not a collection");
+        }
+
+        [TestMethod]
+        public void Enumerables_Children_Have_Type_Set_To_Inner_Type()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(XmlArrayChildNode));
+            var root = nodes.First(x => x.Type == typeof(XmlArrayChildNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(typeof(string), child.AvailableNodes.First().Value.Type, "Child type was incorrect");
+        }
+
+        [TestMethod]
+        public void Array_Children_Have_Type_Set_To_Inner_Type()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(ArrayChildNode));
+            var root = nodes.First(x => x.Type == typeof(ArrayChildNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(typeof(int), child.AvailableNodes.First().Value.Type, "Child type was incorrect");
+        }
     }
 }

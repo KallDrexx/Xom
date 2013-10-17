@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +26,7 @@ namespace Xom.Core
 
             node = new Node
             {
-                Type = type,
+                Type = GetInnerType(type),
                 IsRoot =  isRoot,
                 Attributes = type.GetProperties()
                                  .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
@@ -40,16 +41,18 @@ namespace Xom.Core
 
             foundNodes.Add(node);
 
-            var childTypes = type.GetProperties()
-                                 .Where(PropertyIsChildElement)
-                                 .Select(x => x.PropertyType);
+            var children = type.GetProperties()
+                                 .Where(PropertyIsChildElement);
 
             var childNodes = new List<NodeChild>();
-            foreach (var childType in childTypes)
+            foreach (var child in children)
             {
-                var childNode = CreateNodesForType(childType, foundNodes);
+                var childNode = CreateNodesForType(child.PropertyType, foundNodes);
                 childNodes.Add(new NodeChild
                 {
+                    PropertyName = child.Name,
+                    IsXmlArray = child.CustomAttributes.Any(x => x.AttributeType == typeof(XmlArrayAttribute)),
+                    IsCollection = typeof(IEnumerable).IsAssignableFrom(child.PropertyType),
                     AvailableNodes = new Dictionary<string, Node>
                     {
                         {"", childNode}
@@ -101,6 +104,20 @@ namespace Xom.Core
                 return false;
 
             return true;
+        }
+
+        private Type GetInnerType(Type type)
+        {
+            if (typeof (IEnumerable).IsAssignableFrom(type))
+            {
+                if (type.IsGenericType)
+                    return type.GetGenericArguments()[0];
+
+                if (type.IsArray)
+                    return type.GetElementType();
+            }
+
+            return type;
         }
     }
 }
