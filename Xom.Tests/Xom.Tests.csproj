@@ -54,6 +54,7 @@
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueTypeAttributeNode.cs" />
     <Compile Include="TestObjects\Nodes\ArrayChildNode.cs" />
+    <Compile Include="TestObjects\Nodes\XmlArrayItemChildWithSubtypeSetNode.cs" />
     <Compile Include="TestObjects\Nodes\ExplicitlyNamedXmlArrayNode.cs" />
     <Compile Include="TestObjects\Nodes\IgnoredChildNode.cs" />
     <Compile Include="TestObjects\Nodes\MultipleSimpleChildNode.cs" />

@@ -219,7 +219,7 @@ namespace Xom.Tests
         }
 
         [TestMethod]
-        public void Child_With_Subclass_Defined_In_Type_Has_Sublass_Set_For_Node()
+        public void Child_With_XmlElement_Subclass_Defined_In_Type_Has_Sublass_Set_For_Node()
         {
             var xom = new XomReader();
             var nodes = xom.GenerateNodes(typeof(XmlElementChildWithSubtypeSetNode));
@@ -227,6 +227,19 @@ namespace Xom.Tests
             var child = root.Children.First();
 
             Assert.AreEqual(typeof(XmlElementChildWithSubtypeSetNode.ClassB), child.AvailableNodes.First().Value.Type,
+                "Child's available node had an incorrect type");
+        }
+
+        [TestMethod]
+        public void Child_With_XmlArrayItem_Subclass_Defined_In_Type_Has_Sublass_Set_For_Node()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(XmlArrayItemChildWithSubtypeSetNode));
+            var root = nodes.First(x => x.Type == typeof(XmlArrayItemChildWithSubtypeSetNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(1, child.AvailableNodes.Count(), "Incorrect number of child available nodes");
+            Assert.AreEqual(typeof(XmlArrayItemChildWithSubtypeSetNode.ClassB), child.AvailableNodes.First().Value.Type,
                 "Child's available node had an incorrect type");
         }
     }

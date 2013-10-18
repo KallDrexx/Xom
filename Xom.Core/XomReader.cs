@@ -138,19 +138,31 @@ namespace Xom.Core
             return availableNodes;
         }
 
-        private void AddAvailableNodesForXmlArray(IEnumerable<object> attributes, PropertyInfo property,
+        private void AddAvailableNodesForXmlArray(object[] attributes, PropertyInfo property,
                                                     ICollection<Node> foundNodes, Dictionary<string, Node> availableNodes,
                                                     ref bool atLeastOneElementNameFound)
         {
-            var xmlArrayAttribute = attributes.Where(x => x.GetType() == typeof (XmlArrayAttribute))
-                                              .Select(x => (XmlArrayAttribute) x)
-                                              .FirstOrDefault();
+            var xmlArrayAttribute = attributes.OfType<XmlArrayAttribute>().FirstOrDefault();
+            var xmlArrayItemAttributes = attributes.OfType<XmlArrayItemAttribute>().ToArray();
 
-            if (xmlArrayAttribute != null && !string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
+            if (xmlArrayAttribute != null)
             {
-                var childNode = CreateNodesForType(property.PropertyType, foundNodes);
-                availableNodes.Add(xmlArrayAttribute.ElementName, childNode);
-                atLeastOneElementNameFound = true;
+                if (!string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
+                {
+                    var childNode = CreateNodesForType(property.PropertyType, foundNodes);
+                    availableNodes.Add(xmlArrayAttribute.ElementName, childNode);
+                    atLeastOneElementNameFound = true;
+                }
+                else if (xmlArrayItemAttributes.Length > 0)
+                {
+                    foreach (var xmlArrayItemAttribute in xmlArrayItemAttributes)
+                    {
+                        var childNode = CreateNodesForType(xmlArrayItemAttribute.Type, foundNodes);
+                        availableNodes.Add(xmlArrayItemAttribute.ElementName, childNode);
+                    }
+
+                    atLeastOneElementNameFound = true;
+                }
             }
         }
 
