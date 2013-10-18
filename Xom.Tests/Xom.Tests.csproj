@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestObjects\Attributes\ExplicitelyNamedAttribute.cs" />
     <Compile Include="TestObjects\Attributes\MultipleAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\SimpleAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />

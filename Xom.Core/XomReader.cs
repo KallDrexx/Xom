@@ -32,7 +32,7 @@ namespace Xom.Core
                                  .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
                                  .Select(x => new NodeAttribute
                                  {
-                                     Name = x.Name,
+                                     Name = GetAttributeName(x),
                                      Type = x.PropertyType,
                                      IsRequired = AttributeTypeRequired(x, type)
                                  })
@@ -136,6 +136,17 @@ namespace Xom.Core
                 return xmlArrayAttribute.ElementName;
 
             return property.Name;
+        }
+
+        private string GetAttributeName(PropertyInfo property)
+        {
+            var attributeDetails = property.GetCustomAttributes(typeof (XmlAttributeAttribute), false)
+                                           .Cast<XmlAttributeAttribute>()
+                                           .First();
+
+            return !string.IsNullOrWhiteSpace(attributeDetails.AttributeName)
+                       ? attributeDetails.AttributeName
+                       : property.Name;
         }
     }
 }

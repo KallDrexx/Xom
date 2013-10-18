@@ -79,5 +79,15 @@ namespace Xom.Tests
 
             Assert.IsFalse(attribute.IsRequired, "Value specified attribute was incorrectly marked as required");
         }
+
+        [TestMethod]
+        public void Generated_Node_Attribute_Has_Explicit_Name_If_Set()
+        {
+            var xom = new XomReader();
+            var node = xom.GenerateNodes(typeof(ExplicitelyNamedAttribute));
+            var attribute = node.First().Attributes.First();
+
+            Assert.AreEqual("Name", attribute.Name, "Attribute name was incorrect");
+        }
     }
 }
