@@ -124,11 +124,26 @@ namespace Xom.Core
             bool atLeastOneElementNameFound = false;
             var availableNodes = new Dictionary<string, Node>();
             var attributes = property.GetCustomAttributes(false)
-                                     .Select(x => new {Type = x.GetType(), Attribute = x})
                                      .ToArray();
 
-            var xmlArrayAttribute = attributes.Where(x => x.Type == typeof(XmlArrayAttribute))
-                                              .Select(x => x.Attribute as XmlArrayAttribute)
+            AddAvailableNodesForXmlArray(attributes, property, foundNodes, availableNodes, ref atLeastOneElementNameFound);
+            AddAvailableNodesForXmlElement(attributes, property, foundNodes, availableNodes, ref atLeastOneElementNameFound);
+
+            if (!atLeastOneElementNameFound)
+            {
+                var childNode = CreateNodesForType(property.PropertyType, foundNodes);
+                availableNodes.Add(property.Name, childNode);
+            }
+
+            return availableNodes;
+        }
+
+        private void AddAvailableNodesForXmlArray(IEnumerable<object> attributes, PropertyInfo property,
+                                                    ICollection<Node> foundNodes, Dictionary<string, Node> availableNodes,
+                                                    ref bool atLeastOneElementNameFound)
+        {
+            var xmlArrayAttribute = attributes.Where(x => x.GetType() == typeof (XmlArrayAttribute))
+                                              .Select(x => (XmlArrayAttribute) x)
                                               .FirstOrDefault();
 
             if (xmlArrayAttribute != null && !string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
@@ -137,9 +152,14 @@ namespace Xom.Core
                 availableNodes.Add(xmlArrayAttribute.ElementName, childNode);
                 atLeastOneElementNameFound = true;
             }
+        }
 
-            var xmlElementAttributes = attributes.Where(x => x.Type == typeof (XmlElementAttribute))
-                                                 .Select(x => (XmlElementAttribute)x.Attribute)
+        private void AddAvailableNodesForXmlElement(IEnumerable<object> attributes, PropertyInfo property,
+                                                    ICollection<Node> foundNodes, Dictionary<string, Node> availableNodes,
+                                                    ref bool atLeastOneElementNameFound)
+        {
+            var xmlElementAttributes = attributes.Where(x => x.GetType() == typeof(XmlElementAttribute))
+                                                 .Select(x => (XmlElementAttribute)x)
                                                  .ToArray();
 
             foreach (var xmlElementAttribute in xmlElementAttributes)
@@ -154,14 +174,6 @@ namespace Xom.Core
 
                 atLeastOneElementNameFound = true;
             }
-
-            if (!atLeastOneElementNameFound)
-            {
-                var childNode = CreateNodesForType(property.PropertyType, foundNodes);
-                availableNodes.Add(property.Name, childNode);
-            }
-
-            return availableNodes;
         }
 
         private string GetAttributeName(PropertyInfo property)
