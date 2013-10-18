@@ -219,6 +219,19 @@ namespace Xom.Tests
         }
 
         [TestMethod]
+        public void Multiple_XmlElement_Attributes_Have_Correct_Node_Type_When_Subclasses_Set()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(MultipleTypedElementNode));
+            var root = nodes.First(x => x.Type == typeof(MultipleTypedElementNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(2, child.AvailableNodes.Count(), "Incorrect number of nodes for child");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassB" && x.Value.Type == typeof(MultipleTypedElementNode.ClassB)), "No available node was found with the name ClassB");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassC" && x.Value.Type == typeof(MultipleTypedElementNode.ClassC)), "No available node was found with the name ClassC");
+        }
+
+        [TestMethod]
         public void Child_With_XmlElement_Subclass_Defined_In_Type_Has_Sublass_Set_For_Node()
         {
             var xom = new XomReader();
@@ -241,6 +254,19 @@ namespace Xom.Tests
             Assert.AreEqual(1, child.AvailableNodes.Count(), "Incorrect number of child available nodes");
             Assert.AreEqual(typeof(XmlArrayItemChildWithSubtypeSetNode.ClassB), child.AvailableNodes.First().Value.Type,
                 "Child's available node had an incorrect type");
+        }
+
+        [TestMethod]
+        public void Multiple_XmlArrayItem_Attributes_Have_Correct_Node_Type_When_Subclasses_Set()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(MultipleTypedArrayItemNode));
+            var root = nodes.First(x => x.Type == typeof(MultipleTypedArrayItemNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(2, child.AvailableNodes.Count(), "Incorrect number of nodes for child");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassB" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassB)), "No available node was found with the name ClassB");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassC" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassC)), "No available node was found with the name ClassC");
         }
     }
 }
