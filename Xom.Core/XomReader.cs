@@ -20,6 +20,9 @@ namespace Xom.Core
 
         private Node CreateNodesForType(Type type, ICollection<Node> foundNodes, bool isRoot = false)
         {
+            if (type == null)
+                throw new ArgumentNullException("type");
+
             var node = foundNodes.FirstOrDefault(x => x.Type == type);
             if (node != null)
                 return node;
@@ -120,7 +123,6 @@ namespace Xom.Core
         {
             bool atLeastOneElementNameFound = false;
             var availableNodes = new Dictionary<string, Node>();
-            var childNode = CreateNodesForType(property.PropertyType, foundNodes);
             var attributes = property.GetCustomAttributes(false)
                                      .Select(x => new {Type = x.GetType(), Attribute = x})
                                      .ToArray();
@@ -131,16 +133,20 @@ namespace Xom.Core
 
             if (xmlArrayAttribute != null && !string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
             {
+                var childNode = CreateNodesForType(property.PropertyType, foundNodes);
                 availableNodes.Add(xmlArrayAttribute.ElementName, childNode);
                 atLeastOneElementNameFound = true;
             }
 
             var xmlElementAttributes = attributes.Where(x => x.Type == typeof (XmlElementAttribute))
-                                                 .Select(x => x.Attribute as XmlElementAttribute)
+                                                 .Select(x => (XmlElementAttribute)x.Attribute)
                                                  .ToArray();
 
             foreach (var xmlElementAttribute in xmlElementAttributes)
             {
+                var type = xmlElementAttribute.Type ?? property.PropertyType;
+                var childNode = CreateNodesForType(type, foundNodes);
+
                 if (!string.IsNullOrWhiteSpace(xmlElementAttribute.ElementName))
                     availableNodes.Add(xmlElementAttribute.ElementName, childNode);
                 else
@@ -150,7 +156,10 @@ namespace Xom.Core
             }
 
             if (!atLeastOneElementNameFound)
+            {
+                var childNode = CreateNodesForType(property.PropertyType, foundNodes);
                 availableNodes.Add(property.Name, childNode);
+            }
 
             return availableNodes;
         }

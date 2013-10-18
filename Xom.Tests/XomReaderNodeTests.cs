@@ -217,5 +217,17 @@ namespace Xom.Tests
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "Test1"), "No available node was found with the name Test1");
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "Test2"), "No available node was found with the name Test2");
         }
+
+        [TestMethod]
+        public void Child_With_Subclass_Defined_In_Type_Has_Sublass_Set_For_Node()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(XmlElementChildWithSubtypeSetNode));
+            var root = nodes.First(x => x.Type == typeof(XmlElementChildWithSubtypeSetNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(typeof(XmlElementChildWithSubtypeSetNode.ClassB), child.AvailableNodes.First().Value.Type,
+                "Child's available node had an incorrect type");
+        }
     }
 }
