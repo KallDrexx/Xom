@@ -47,19 +47,12 @@ namespace Xom.Core
             var childNodes = new List<NodeChild>();
             foreach (var child in children)
             {
-                var childNode = CreateNodesForType(child.PropertyType, foundNodes);
                 childNodes.Add(new NodeChild
                 {
                     PropertyName = child.Name,
                     IsXmlArray = child.CustomAttributes.Any(x => x.AttributeType == typeof(XmlArrayAttribute)),
                     IsCollection = typeof(IEnumerable).IsAssignableFrom(child.PropertyType),
-                    AvailableNodes = new Dictionary<string, Node>
-                    {
-                        {
-                            GetNodeName(child), 
-                            childNode
-                        }
-                    }
+                    AvailableNodes = CreateAvailableNodesForProperty(child, foundNodes)
                 });
             }
 
@@ -123,19 +116,43 @@ namespace Xom.Core
             return type;
         }
 
-        private string GetNodeName(PropertyInfo property)
+        private Dictionary<string, Node> CreateAvailableNodesForProperty(PropertyInfo property, ICollection<Node> foundNodes)
         {
+            bool atLeastOneElementNameFound = false;
+            var availableNodes = new Dictionary<string, Node>();
+            var childNode = CreateNodesForType(property.PropertyType, foundNodes);
             var attributes = property.GetCustomAttributes(false)
-                                     .ToDictionary(x => x.GetType().Name, x => x);
+                                     .Select(x => new {Type = x.GetType(), Attribute = x})
+                                     .ToArray();
 
-            var xmlArrayAttribute = attributes.Where(x => x.Key == typeof (XmlArrayAttribute).Name)
-                                              .Select(x => x.Value as XmlArrayAttribute)
+            var xmlArrayAttribute = attributes.Where(x => x.Type == typeof(XmlArrayAttribute))
+                                              .Select(x => x.Attribute as XmlArrayAttribute)
                                               .FirstOrDefault();
 
             if (xmlArrayAttribute != null && !string.IsNullOrWhiteSpace(xmlArrayAttribute.ElementName))
-                return xmlArrayAttribute.ElementName;
+            {
+                availableNodes.Add(xmlArrayAttribute.ElementName, childNode);
+                atLeastOneElementNameFound = true;
+            }
 
-            return property.Name;
+            var xmlElementAttributes = attributes.Where(x => x.Type == typeof (XmlElementAttribute))
+                                                 .Select(x => x.Attribute as XmlElementAttribute)
+                                                 .ToArray();
+
+            foreach (var xmlElementAttribute in xmlElementAttributes)
+            {
+                if (!string.IsNullOrWhiteSpace(xmlElementAttribute.ElementName))
+                    availableNodes.Add(xmlElementAttribute.ElementName, childNode);
+                else
+                    availableNodes.Add(property.Name, childNode);
+
+                atLeastOneElementNameFound = true;
+            }
+
+            if (!atLeastOneElementNameFound)
+                availableNodes.Add(property.Name, childNode);
+
+            return availableNodes;
         }
 
         private string GetAttributeName(PropertyInfo property)

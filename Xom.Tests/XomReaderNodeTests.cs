@@ -203,5 +203,19 @@ namespace Xom.Tests
 
             Assert.AreEqual("Name", child.AvailableNodes.First().Key, "Child node's name was incorrect");
         }
+
+        [TestMethod]
+        public void Multiple_XmlElement_Attributes_On_Child_Create_Child_With_All_Names()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(MultipleSimpleChildNode));
+            var root = nodes.First(x => x.Type == typeof(MultipleSimpleChildNode));
+            var child = root.Children.First();
+
+            Assert.AreEqual(1, root.Children.Count(), "Incorrect number of children on the root");
+            Assert.AreEqual(2, child.AvailableNodes.Count(), "Incorrect number of nodes for child");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "Test1"), "No available node was found with the name Test1");
+            Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "Test2"), "No available node was found with the name Test2");
+        }
     }
 }
