@@ -37,4 +37,17 @@ There are several considerations that plain reflection will not catch:
 * The name of the attribute for `LevelValue` is `Level`
 * `LevelEntities` is not just child nodes, but instead it will have a `LevelEntities` node that can contain either `Player` or `Enemy` child nodes.
 
-These are the intracacies that Xom was created to accurately describe model.
+These are the intracacies that Xom was created to accurately model.
+
+Usage
+-----
+
+Using xom is as easy as 
+
+```
+var xom = new XomReader();
+var nodes = xom.GenerateNodes(typeof(MySerializationType));
+```
+
+`GenerateNodes` looks at the type passed in and returns a collection of [Nodes](https://github.com/KallDrexx/Xom/blob/master/Xom.Core/Models/Node.cs).  
+            
