@@ -49,5 +49,4 @@ var xom = new XomReader();
 var nodes = xom.GenerateNodes(typeof(MySerializationType));
 ```
 
-`GenerateNodes` looks at the type passed in and returns a collection of [Nodes](https://github.com/KallDrexx/Xom/blob/master/Xom.Core/Models/Node.cs).  
-            
+`GenerateNodes` looks at the type passed in and returns a collection of [Nodes](https://github.com/KallDrexx/Xom/blob/master/Xom.Core/Models/Node.cs), which provides a runtime representation of the Xml types that is much easier to work with.
