@@ -32,7 +32,7 @@ namespace Xom.Core
                 Type = GetInnerType(type),
                 IsRoot =  isRoot,
                 Attributes = type.GetProperties()
-                                 .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
+                                 .Where(PropertyIsXmlAttribute)
                                  .Select(x => new XomNodeAttribute
                                  {
                                      Name = GetAttributeName(x),
@@ -96,13 +96,25 @@ namespace Xom.Core
 
         private bool PropertyIsChildElement(PropertyInfo property)
         {
-            if (property.CustomAttributes.Any(x => x.AttributeType == typeof(XmlAttributeAttribute)))
-                return false;
+            var elementAttributeTypes = new[]
+            {
+                typeof (XmlElementAttribute),
+                typeof (XmlArrayAttribute)
+            };
 
-            if (property.CustomAttributes.Any(x => x.AttributeType == typeof (XmlIgnoreAttribute)))
-                return false;
+            return property.CustomAttributes.Any(x => elementAttributeTypes.Contains(x.AttributeType));
+        }
 
-            return true;
+        private bool PropertyIsXmlAttribute(PropertyInfo property)
+        {
+            var nonXmlAttributeTypes = new[]
+            {
+                typeof (XmlElementAttribute),
+                typeof (XmlArrayAttribute),
+                typeof (XmlIgnoreAttribute)
+            };
+
+            return property.CustomAttributes.All(x => !nonXmlAttributeTypes.Contains(x.AttributeType));
         }
 
         private Type GetInnerType(Type type)
@@ -192,9 +204,9 @@ namespace Xom.Core
         {
             var attributeDetails = property.GetCustomAttributes(typeof (XmlAttributeAttribute), false)
                                            .Cast<XmlAttributeAttribute>()
-                                           .First();
+                                           .FirstOrDefault();
 
-            return !string.IsNullOrWhiteSpace(attributeDetails.AttributeName)
+            return (attributeDetails != null && !string.IsNullOrWhiteSpace(attributeDetails.AttributeName))
                        ? attributeDetails.AttributeName
                        : property.Name;
         }

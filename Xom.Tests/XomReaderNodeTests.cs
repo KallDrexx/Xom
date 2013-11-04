@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xom.Core;
-using Xom.Tests.TestObjects.Attributes;
 using Xom.Tests.TestObjects.Nodes;
 
 namespace Xom.Tests
@@ -70,18 +68,16 @@ namespace Xom.Tests
         }
 
         [TestMethod]
-        public void Non_Xml_Attributed_Property_Counted_As_Child()
+        public void Non_Xml_Attributed_Property_Counted_As_Attribute()
         {
             var xom = new XomReader();
             var nodes = xom.GenerateNodes(typeof(NonAttributedNode));
             var root = nodes.First(x => x.Type == typeof(NonAttributedNode));
 
-            Assert.IsNotNull(root.Children, "Root's children array was null");
-            Assert.AreEqual(1, root.Children.Count(), "Root has an incorrect number of children");
-            Assert.IsNotNull(root.Children.First().AvailableNodes, "Available nodes enumerable was null");
-            Assert.AreEqual(1, root.Children.First().AvailableNodes.Count(), "Available child nodes enumerable had an incorrect number of elements");
-            Assert.AreEqual(typeof(string), root.Children.First().AvailableNodes.First().Value.Type,
-                "Root node references incorrect type of child node");
+            Assert.IsNotNull(root.Attributes, "Root's children array was null");
+            Assert.AreEqual(1, root.Attributes.Count(), "Root has an incorrect number of attributes");
+            Assert.AreEqual(typeof(string), root.Attributes.First().Type, "Attribute had an incorrect type");
+            Assert.AreEqual("TestAttribute", root.Attributes.First().Name, "Attribute had an incorrect name");
         }
 
         [TestMethod]
@@ -267,6 +263,17 @@ namespace Xom.Tests
             Assert.AreEqual(2, child.AvailableNodes.Count(), "Incorrect number of nodes for child");
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassB" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassB)), "No available node was found with the name ClassB");
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassC" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassC)), "No available node was found with the name ClassC");
+        }
+
+        [TestMethod]
+        public void String_Children_Have_No_Children()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(StringChildNode));
+            var root = nodes.First(x => x.Type == typeof(StringChildNode));
+            var child = root.Children.First().AvailableNodes.First().Value;
+
+            Assert.IsFalse(child.Children.Any(), "The child contained children when it shouldn't have");
         }
     }
 }
