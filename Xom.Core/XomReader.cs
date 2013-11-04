@@ -10,15 +10,15 @@ namespace Xom.Core
 {
     public class XomReader
     {
-        public IEnumerable<Node> GenerateNodes(Type type)
+        public IEnumerable<XomNode> GenerateNodes(Type type)
         {
-            var nodes = new List<Node>();
+            var nodes = new List<XomNode>();
             CreateNodesForType(type, nodes, true);
 
             return nodes.ToArray();
         }
 
-        private Node CreateNodesForType(Type type, ICollection<Node> foundNodes, bool isRoot = false)
+        private XomNode CreateNodesForType(Type type, ICollection<XomNode> foundNodes, bool isRoot = false)
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -27,13 +27,13 @@ namespace Xom.Core
             if (node != null)
                 return node;
 
-            node = new Node
+            node = new XomNode
             {
                 Type = GetInnerType(type),
                 IsRoot =  isRoot,
                 Attributes = type.GetProperties()
                                  .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
-                                 .Select(x => new NodeAttribute
+                                 .Select(x => new XomNodeAttribute
                                  {
                                      Name = GetAttributeName(x),
                                      Type = x.PropertyType,
@@ -47,10 +47,10 @@ namespace Xom.Core
             var children = type.GetProperties()
                                  .Where(PropertyIsChildElement);
 
-            var childNodes = new List<NodeChild>();
+            var childNodes = new List<XomNodeChild>();
             foreach (var child in children)
             {
-                childNodes.Add(new NodeChild
+                childNodes.Add(new XomNodeChild
                 {
                     PropertyName = child.Name,
                     IsXmlArray = child.CustomAttributes.Any(x => x.AttributeType == typeof(XmlArrayAttribute)),
@@ -119,10 +119,10 @@ namespace Xom.Core
             return type;
         }
 
-        private Dictionary<string, Node> CreateAvailableNodesForProperty(PropertyInfo property, ICollection<Node> foundNodes)
+        private Dictionary<string, XomNode> CreateAvailableNodesForProperty(PropertyInfo property, ICollection<XomNode> foundNodes)
         {
             bool atLeastOneElementNameFound = false;
-            var availableNodes = new Dictionary<string, Node>();
+            var availableNodes = new Dictionary<string, XomNode>();
             var attributes = property.GetCustomAttributes(false)
                                      .ToArray();
 
@@ -139,7 +139,7 @@ namespace Xom.Core
         }
 
         private void AddAvailableNodesForXmlArray(object[] attributes, PropertyInfo property,
-                                                    ICollection<Node> foundNodes, Dictionary<string, Node> availableNodes,
+                                                    ICollection<XomNode> foundNodes, Dictionary<string, XomNode> availableNodes,
                                                     ref bool atLeastOneElementNameFound)
         {
             var xmlArrayAttribute = attributes.OfType<XmlArrayAttribute>().FirstOrDefault();
@@ -167,7 +167,7 @@ namespace Xom.Core
         }
 
         private void AddAvailableNodesForXmlElement(IEnumerable<object> attributes, PropertyInfo property,
-                                                    ICollection<Node> foundNodes, Dictionary<string, Node> availableNodes,
+                                                    ICollection<XomNode> foundNodes, Dictionary<string, XomNode> availableNodes,
                                                     ref bool atLeastOneElementNameFound)
         {
             var xmlElementAttributes = attributes.Where(x => x.GetType() == typeof(XmlElementAttribute))

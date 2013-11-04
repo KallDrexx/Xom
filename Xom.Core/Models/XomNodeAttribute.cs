@@ -2,7 +2,7 @@
 
 namespace Xom.Core.Models
 {
-    public class NodeAttribute
+    public class XomNodeAttribute
     {
         public string Name { get; set; }
         public Type Type { get; set; }

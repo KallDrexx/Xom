@@ -2,11 +2,11 @@
 
 namespace Xom.Core.Models
 {
-    public class NodeChild
+    public class XomNodeChild
     {
         public string PropertyName { get; set; }
         public bool IsXmlArray { get; set; }
         public bool IsCollection { get; set; }
-        public Dictionary<string, Node> AvailableNodes { get; set; }
+        public Dictionary<string, XomNode> AvailableNodes { get; set; }
     }
 }

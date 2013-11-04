@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Xom.Core.Models
 {
-    public class Node
+    public class XomNode
     {
         public Type Type { get; set; }
         public bool IsRoot { get; set; }
-        public IEnumerable<NodeChild> Children { get; set; }
-        public IEnumerable<NodeAttribute> Attributes { get; set; } 
+        public IEnumerable<XomNodeChild> Children { get; set; }
+        public IEnumerable<XomNodeAttribute> Attributes { get; set; } 
     }
 }
