@@ -56,26 +56,29 @@ You can then use the `XomNode` collection returned to get details on the XML str
 ```
     public class SchemaNode : ViewModelBase
     {
-        private string _name;
         private readonly ObservableCollection<SchemaNode> _children;
         private readonly XomNode _xomNode;
+        private string _name;
+        private bool _isSelected;
+        private bool _isExpanded;
+        private bool _isLoaded;
 
-        public SchemaNode(XomNode node, string name, int depth)
+        public SchemaNode(XomNode node, string name)
         {
             _children = new ObservableCollection<SchemaNode>();
             _xomNode = node;
             Name = name;
 
-            if (depth < 4)
-            {
-                var childNodes = _xomNode.Children
-                                         .SelectMany(x => x.AvailableNodes)
-                                         .OrderBy(x => x.Key);
-
-                foreach (var keyValuePair in childNodes)
-                    _children.Add(new UiNode(keyValuePair.Value, keyValuePair.Key, depth + 1));
-            }
+            if (node.Children.Any())
+                _children.Add(new SchemaNode());
         }
+
+        /// <summary>
+        /// Constructor meant for creating dummy children
+        /// </summary>
+        private SchemaNode() {}
+
+        public IEnumerable<SchemaNode> Children { get { return _children; } }
 
         public string Name
         {
@@ -83,7 +86,36 @@ You can then use the `XomNode` collection returned to get details on the XML str
             set { Set(() => Name, ref _name, value); }
         }
 
-        public IEnumerable<SchemaNode> Children { get { return _children; } }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { Set(() => IsSelected, ref _isSelected, value); }
+        }
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set
+            {
+                Set(() => IsExpanded, ref _isExpanded, value);
+                if (_isExpanded && !_isLoaded)
+                    LoadChildren();
+            }
+        }
+
+        private void LoadChildren()
+        {
+            _children.Clear();
+
+            var childNodes = _xomNode.Children
+                                     .SelectMany(x => x.AvailableNodes)
+                                     .OrderBy(x => x.Key);
+
+            foreach (var keyValuePair in childNodes)
+                _children.Add(new UiNode(keyValuePair.Value, keyValuePair.Key));
+
+            _isLoaded = true;
+        }
     }
 ```
 
@@ -102,7 +134,7 @@ Next you have to create a view model for the window containing the TreeView.  In
 
             RootNode = new List<SchemaNode>
             {
-                new SchemaNode(rootNode, "root", 0)
+                new SchemaNode(rootNode, "root")
             };
         }
 
