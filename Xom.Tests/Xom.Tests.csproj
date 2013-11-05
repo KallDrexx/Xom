@@ -56,6 +56,7 @@
     <Compile Include="TestObjects\Nodes\ArrayChildNode.cs" />
     <Compile Include="TestObjects\Nodes\MultipleTypedArrayItemNode.cs" />
     <Compile Include="TestObjects\Nodes\MultipleTypedElementNode.cs" />
+    <Compile Include="TestObjects\Nodes\NodeWithPrivateSetterProperty.cs" />
     <Compile Include="TestObjects\Nodes\XmlArrayItemChildWithSubtypeSetNode.cs" />
     <Compile Include="TestObjects\Nodes\ExplicitlyNamedXmlArrayNode.cs" />
     <Compile Include="TestObjects\Nodes\IgnoredChildNode.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="TestObjects\Nodes\SingleNode.cs" />
     <Compile Include="TestObjects\Nodes\XmlArrayChildNode.cs" />
     <Compile Include="TestObjects\Nodes\XmlElementChildWithSubtypeSetNode.cs" />
+    <Compile Include="XomReaderNodeWithCollectionsTests.cs" />
     <Compile Include="XomReaderNodeTests.cs" />
     <Compile Include="XomReaderAttributeTests.cs" />
   </ItemGroup>
