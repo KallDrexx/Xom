@@ -44,8 +44,9 @@ namespace Xom.Core
 
             foundNodes.Add(node);
 
-            var children = type.GetProperties()
-                                 .Where(PropertyIsChildElement);
+            var children = GetInnerType(type).GetProperties()
+                                             .Where(PropertyIsChildElement)
+                                             .ToArray();
 
             var childNodes = new List<XomNodeChild>();
             foreach (var child in children)
