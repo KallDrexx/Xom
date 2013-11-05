@@ -255,5 +255,16 @@ namespace Xom.Tests
 
             Assert.IsFalse(root.Children.Any(), "More than one child was incorrectly detected");
         }
+
+        [TestMethod]
+        public void Node_With_No_Children_Has_Empty_Children_Enumerable()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(NodeWithoutChildren));
+            var root = nodes.First(x => x.Type == typeof(NodeWithoutChildren));
+
+            Assert.IsNotNull(root.Children, "Children enumerable was null");
+            Assert.IsFalse(root.Children.Any(), "Children enumerable was not empty");
+        }
     }
 }
