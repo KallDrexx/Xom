@@ -9,7 +9,6 @@ namespace Xom.Tests.TestObjects.Attributes
 {
     class ValueSpecifiedAttributeNode
     {
-        [XmlIgnore]
         public bool TestValueSpecified { get; set; }
 
         [XmlAttribute]
