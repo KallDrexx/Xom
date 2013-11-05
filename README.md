@@ -128,4 +128,6 @@ In this example, `AssetCollection` is the C# type that is used for serializing d
     </Grid>
 ```
 
-This will produce: ![Example](https://dl.dropboxusercontent.com/u/6753359/SchemaTreeView.PNG_
+This will produce: 
+
+![Example](https://dl.dropboxusercontent.com/u/6753359/SchemaTreeView.PNG)
