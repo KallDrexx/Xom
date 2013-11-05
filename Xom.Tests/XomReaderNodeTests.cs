@@ -150,28 +150,6 @@ namespace Xom.Tests
         }
 
         [TestMethod]
-        public void Enumerables_Are_Marked_As_Being_A_Collection()
-        {
-            var xom = new XomReader();
-            var nodes = xom.GenerateNodes(typeof(XmlArrayChildNode));
-            var root = nodes.First(x => x.Type == typeof(XmlArrayChildNode));
-            var child = root.Children.First();
-
-            Assert.IsTrue(child.IsCollection, "Child was marked as not a collection");
-        }
-
-        [TestMethod]
-        public void Enumerables_Children_Have_Type_Set_To_Inner_Type()
-        {
-            var xom = new XomReader();
-            var nodes = xom.GenerateNodes(typeof(XmlArrayChildNode));
-            var root = nodes.First(x => x.Type == typeof(XmlArrayChildNode));
-            var child = root.Children.First();
-
-            Assert.AreEqual(typeof(string), child.AvailableNodes.First().Value.Type, "Child type was incorrect");
-        }
-
-        [TestMethod]
         public void Array_Children_Have_Type_Set_To_Inner_Type()
         {
             var xom = new XomReader();
@@ -191,17 +169,6 @@ namespace Xom.Tests
             var child = root.Children.First();
 
             Assert.AreEqual("Child", child.AvailableNodes.First().Key, "Child node's name was incorrect");
-        }
-
-        [TestMethod]
-        public void XmlArray_Child_Node_Name_Is_Explicitly_Stated_Name()
-        {
-            var xom = new XomReader();
-            var nodes = xom.GenerateNodes(typeof(ExplicitlyNamedXmlArrayNode));
-            var root = nodes.First(x => x.Type == typeof(ExplicitlyNamedXmlArrayNode));
-            var child = root.Children.First();
-
-            Assert.AreEqual("Name", child.AvailableNodes.First().Key, "Child node's name was incorrect");
         }
 
         [TestMethod]
@@ -267,6 +234,26 @@ namespace Xom.Tests
             Assert.AreEqual(2, child.AvailableNodes.Count(), "Incorrect number of nodes for child");
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassB" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassB)), "No available node was found with the name ClassB");
             Assert.IsTrue(child.AvailableNodes.Any(x => x.Key == "ClassC" && x.Value.Type == typeof(MultipleTypedArrayItemNode.ClassC)), "No available node was found with the name ClassC");
+        }
+
+        [TestMethod]
+        public void Properties_With_Private_Setter_Are_Not_Counted_As_Elements()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(NodeWithPrivateSetterProperty));
+            var root = nodes.First(x => x.Type == typeof(NodeWithPrivateSetterProperty));
+
+            Assert.IsFalse(root.Children.Any(), "More than one child was incorrectly detected");
+        }
+
+        [TestMethod]
+        public void Properties_Without_Setter_Are_Not_Counted_As_Elements()
+        {
+            var xom = new XomReader();
+            var nodes = xom.GenerateNodes(typeof(NodeWithoutSetterProperty));
+            var root = nodes.First(x => x.Type == typeof(NodeWithoutSetterProperty));
+
+            Assert.IsFalse(root.Children.Any(), "More than one child was incorrectly detected");
         }
     }
 }

@@ -54,6 +54,7 @@
     <Compile Include="TestObjects\Attributes\ValueSpecifiedAttributeNode.cs" />
     <Compile Include="TestObjects\Attributes\ValueTypeAttributeNode.cs" />
     <Compile Include="TestObjects\Nodes\ArrayChildNode.cs" />
+    <Compile Include="TestObjects\Nodes\NodeWithoutSetterProperty.cs" />
     <Compile Include="TestObjects\Nodes\MultipleTypedArrayItemNode.cs" />
     <Compile Include="TestObjects\Nodes\MultipleTypedElementNode.cs" />
     <Compile Include="TestObjects\Nodes\NodeWithPrivateSetterProperty.cs" />

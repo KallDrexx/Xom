@@ -96,6 +96,9 @@ namespace Xom.Core
 
         private bool PropertyIsChildElement(PropertyInfo property)
         {
+            if (property.GetSetMethod() == null)
+                return false;
+
             if (property.CustomAttributes.Any(x => x.AttributeType == typeof(XmlAttributeAttribute)))
                 return false;
 
