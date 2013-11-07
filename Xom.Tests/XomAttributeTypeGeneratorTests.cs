@@ -39,19 +39,19 @@ namespace Xom.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
-        public void Exception_Thrown_When_Null_Name_Specified()
+        public void Null_Name_Creates_Guid_Type_Name()
         {
             var attr1 = new XomNodeAttribute { Name = "attr1", Type = typeof(string) };
-            XomAttributeTypeGenerator.GenerateType(new[] { attr1 }, null);
+            var type = XomAttributeTypeGenerator.GenerateType(new[] { attr1 }, null);
+            Guid.Parse(type.Name);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Exception_Thrown_When_Empty_Name_Specified()
+        public void Empty_Name_Creates_Guid_Type_Name()
         {
             var attr1 = new XomNodeAttribute { Name = "attr1", Type = typeof(string) };
-            XomAttributeTypeGenerator.GenerateType(new[] { attr1 }, "  ");
+            var type = XomAttributeTypeGenerator.GenerateType(new[] { attr1 }, "  ");
+            Guid.Parse(type.Name);
         }
 
         [TestMethod]

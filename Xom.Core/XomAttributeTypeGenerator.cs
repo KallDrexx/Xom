@@ -13,10 +13,10 @@ namespace Xom.Core
     {
         public const string GeneratedNamespacePrefix = "XomAttributeGeneratedType.";
 
-        public static Type GenerateType(IEnumerable<XomNodeAttribute> xomAttributes, string typeName)
+        public static Type GenerateType(IEnumerable<XomNodeAttribute> xomAttributes, string typeName = null)
         {
             if (string.IsNullOrWhiteSpace(typeName))
-                throw new ArgumentException("A non-empty type name must be provided for type generation");
+                typeName = Guid.NewGuid().ToString();
 
             // Algorithm based on http://stackoverflow.com/a/3862241/231002
             var typebuilder = GetTypeBuilder(typeName);
