@@ -49,13 +49,17 @@ namespace Xom.Core
 
         private static void CreateProperty(TypeBuilder typeBuilder, XomNodeAttribute attribute)
         {
-            var fieldBuilder = typeBuilder.DefineField("_" + attribute.Name, attribute.Type, FieldAttributes.Private);
+            var attributeType = attribute.Type;
+            if (attributeType.IsValueType && !attribute.IsRequired)
+                attributeType = typeof (Nullable<>).MakeGenericType(attributeType);
+
+            var fieldBuilder = typeBuilder.DefineField("_" + attribute.Name, attributeType, FieldAttributes.Private);
             var propertyBuilder = typeBuilder.DefineProperty(attribute.Name, PropertyAttributes.HasDefault,
-                                                             attribute.Type, null);
+                                                             attributeType, null);
 
             var getPropMthdBldr = typeBuilder.DefineMethod("get_" + attribute.Name,
                                                            MethodAttributes.Public | MethodAttributes.SpecialName |
-                                                           MethodAttributes.HideBySig, attribute.Type, Type.EmptyTypes);
+                                                           MethodAttributes.HideBySig, attributeType, Type.EmptyTypes);
 
             var getIl = getPropMthdBldr.GetILGenerator();
 
@@ -68,7 +72,7 @@ namespace Xom.Core
                   MethodAttributes.Public |
                   MethodAttributes.SpecialName |
                   MethodAttributes.HideBySig,
-                  null, new[] { attribute.Type });
+                  null, new[] { attributeType });
 
             ILGenerator setIl = setPropMthdBldr.GetILGenerator();
             Label modifyProperty = setIl.DefineLabel();

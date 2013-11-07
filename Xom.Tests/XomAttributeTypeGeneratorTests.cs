@@ -16,7 +16,7 @@ namespace Xom.Tests
         public void Can_Generate_Class_Based_On_Xom_Attributes()
         {
             var attr1 = new XomNodeAttribute {Name = "attr1", Type = typeof (string)};
-            var attr2 = new XomNodeAttribute {Name = "attr2", Type = typeof (int)};
+            var attr2 = new XomNodeAttribute {Name = "attr2", Type = typeof (int), IsRequired = true};
 
             Type type = XomAttributeTypeGenerator.GenerateType(new[] {attr1, attr2}, "TestName");
 
@@ -60,6 +60,15 @@ namespace Xom.Tests
             var type = XomAttributeTypeGenerator.GenerateType(null, "Test");
             Assert.IsNotNull(type, "Null type returned");
             Assert.IsFalse(type.GetProperties().Any(), "Type incorrectly had one or more properties");
+        }
+
+        [TestMethod]
+        public void Non_Required_Value_Types_Are_Created_As_Nullable_Properties()
+        {
+            var attr = new XomNodeAttribute { Name = "attr1", Type = typeof(int), IsRequired = false};
+            var type = XomAttributeTypeGenerator.GenerateType(new[] {attr}, "Test");
+            var properties = type.GetProperties();
+            Assert.IsTrue(properties[0].PropertyType == typeof(int?));
         }
     }
 }
