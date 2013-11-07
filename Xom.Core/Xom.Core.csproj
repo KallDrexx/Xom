@@ -43,6 +43,7 @@
     <Compile Include="Models\XomNodeAttribute.cs" />
     <Compile Include="Models\XomNodeChild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XomAttributeTypeGenerator.cs" />
     <Compile Include="XomReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
