@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xom.Core;
@@ -54,6 +55,16 @@ namespace Xom.Tests
             Assert.AreEqual(1, child.Children.First().AvailableNodes.Count(), "Incorrect number of inner children available nodes");
             Assert.AreEqual("InnerChild", child.Children.First().AvailableNodes.First().Key, "Inner child available node has an incorrect name");
             Assert.AreEqual(typeof(string), child.Children.First().AvailableNodes.First().Value.Type, "Inner child node type was incorrect");
+        }
+
+        [TestMethod]
+        public void Enumerables_Have_The_Attributes_Of_The_Inner_Type()
+        {
+            var reader = new XomReader();
+            var nodes = reader.GenerateNodes(typeof (List<NodeWithAttribute>));
+
+            Assert.AreEqual(1, nodes.First().Attributes.Count(), "Incorrect number of elements in the node");
+            Assert.AreEqual("TestAttribute", nodes.First().Attributes.First().Name, "Incorrect attribute name");
         }
     }
 }

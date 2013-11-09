@@ -23,30 +23,24 @@ namespace Xom.Core
             if (type == null)
                 throw new ArgumentNullException("type");
 
+            type = GetInnerType(type);
+
             var node = foundNodes.FirstOrDefault(x => x.Type == type);
             if (node != null)
                 return node;
 
             node = new XomNode
             {
-                Type = GetInnerType(type),
+                Type = type,
                 IsRoot =  isRoot,
-                Attributes = type.GetProperties()
-                                 .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(XmlAttributeAttribute)))
-                                 .Select(x => new XomNodeAttribute
-                                 {
-                                     Name = GetAttributeName(x),
-                                     Type = x.PropertyType,
-                                     IsRequired = AttributeTypeRequired(x, type)
-                                 })
-                                 .ToArray()
+                Attributes = GetAttributesForType(type)
             };
 
             foundNodes.Add(node);
 
-            var children = GetInnerType(type).GetProperties()
-                                             .Where(PropertyIsChildElement)
-                                             .ToArray();
+            var children = type.GetProperties()
+                               .Where(PropertyIsChildElement)
+                               .ToArray();
 
             var childNodes = new List<XomNodeChild>();
             foreach (var child in children)
@@ -62,6 +56,19 @@ namespace Xom.Core
 
             node.Children = childNodes;
             return node;
+        }
+
+        private XomNodeAttribute[] GetAttributesForType(Type type)
+        {
+            return type.GetProperties()
+                       .Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof (XmlAttributeAttribute)))
+                       .Select(x => new XomNodeAttribute
+                       {
+                           Name = GetAttributeName(x),
+                           Type = x.PropertyType,
+                           IsRequired = AttributeTypeRequired(x, type)
+                       })
+                       .ToArray();
         }
 
         private bool AttributeTypeRequired(PropertyInfo attributeProperty, Type containingType)
