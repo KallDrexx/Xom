@@ -71,7 +71,9 @@
     <Compile Include="TestObjects\Nodes\SingleNode.cs" />
     <Compile Include="TestObjects\Nodes\XmlArrayChildNode.cs" />
     <Compile Include="TestObjects\Nodes\XmlElementChildWithSubtypeSetNode.cs" />
+    <Compile Include="TestObjects\XomNodeData\NodeA.cs" />
     <Compile Include="XomAttributeTypeGeneratorTests.cs" />
+    <Compile Include="XomDataSerializerTests.cs" />
     <Compile Include="XomReaderNodeWithCollectionsTests.cs" />
     <Compile Include="XomReaderNodeTests.cs" />
     <Compile Include="XomReaderAttributeTests.cs" />

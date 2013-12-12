@@ -57,7 +57,7 @@ namespace Xom.Core
             node.Children = childNodes;
             return node;
         }
-
+        
         private XomNodeAttribute[] GetAttributesForType(Type type)
         {
             return type.GetProperties()

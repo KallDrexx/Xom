@@ -42,8 +42,10 @@
     <Compile Include="Models\XomNode.cs" />
     <Compile Include="Models\XomNodeAttribute.cs" />
     <Compile Include="Models\XomNodeChild.cs" />
+    <Compile Include="Models\XomNodeData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XomAttributeTypeGenerator.cs" />
+    <Compile Include="XomDataSerializer.cs" />
     <Compile Include="XomReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
