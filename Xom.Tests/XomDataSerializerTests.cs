@@ -27,5 +27,31 @@ namespace Xom.Tests
             Assert.IsNotNull(result, "Resulting object was null");
             Assert.IsInstanceOfType(result, typeof(NodeA), "Resulting object was an incorrect type");
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Exception_Thrown_When_Null_Object_Passed_Into_Seriailzer()
+       { 
+            var serializer = new XomDataSerializer();
+            serializer.Serialize(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Exception_Thrown_When_Data_Object_Has_Null_XomNode()
+        {
+            var data = new XomNodeData();
+            var serializer = new XomDataSerializer();
+            serializer.Serialize(data);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Exception_Thrown_When_Data_Objects_XomNode_Has_Null_Type()
+        {
+            var data = new XomNodeData { NodeType = new XomNode() };
+            var serializer = new XomDataSerializer();
+            serializer.Serialize(data);
+        }
     }
 }
