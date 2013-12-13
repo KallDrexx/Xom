@@ -65,6 +65,7 @@ namespace Xom.Core
                        .Select(x => new XomNodeAttribute
                        {
                            Name = GetAttributeName(x),
+                           PropertyName = x.Name,
                            Type = x.PropertyType,
                            IsRequired = AttributeTypeRequired(x, type)
                        })

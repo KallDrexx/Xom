@@ -89,5 +89,15 @@ namespace Xom.Tests
 
             Assert.AreEqual("Name", attribute.Name, "Attribute name was incorrect");
         }
+
+        [TestMethod]
+        public void Generated_Node_Attribute_Contains_Original_Property_Name()
+        {
+            var xom = new XomReader();
+            var node = xom.GenerateNodes(typeof(ExplicitelyNamedAttribute));
+            var attribute = node.First().Attributes.First();
+
+            Assert.AreEqual("Test", attribute.PropertyName, "Attribute's property name was incorrect");
+        }
     }
 }

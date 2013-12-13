@@ -11,5 +11,8 @@ namespace Xom.Tests.TestObjects.XomNodeData
     {
         [XmlAttribute]
         public string Attribute1 { get; set; }
+
+        [XmlAttribute("Attribute2")]
+        public string Attr2 { get; set; }
     }
 }

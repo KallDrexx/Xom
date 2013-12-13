@@ -11,8 +11,19 @@ using Xom.Tests.TestObjects.XomNodeData;
 namespace Xom.Tests
 {
     [TestClass]
-    class XomDataSerializerTests
+    public class XomDataSerializerTests
     {
+        private readonly XomNode NodeAType = new XomNode
+        {
+            Type = typeof(NodeA),
+            IsRoot = true,
+            Attributes = new XomNodeAttribute[] 
+            {
+                new XomNodeAttribute { Name = "Attribute1", Type = typeof(string), PropertyName = "Attribute1"},
+                new XomNodeAttribute { Name = "Attribute2", Type = typeof(string), PropertyName = "Attr2"}
+            }
+        };
+
         [TestMethod]
         public void Creates_Correct_XML_Serialization_Object()
         {
@@ -31,7 +42,7 @@ namespace Xom.Tests
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Exception_Thrown_When_Null_Object_Passed_Into_Seriailzer()
-       { 
+        {
             var serializer = new XomDataSerializer();
             serializer.Serialize(null);
         }
@@ -52,6 +63,34 @@ namespace Xom.Tests
             var data = new XomNodeData { NodeType = new XomNode() };
             var serializer = new XomDataSerializer();
             serializer.Serialize(data);
+        }
+
+        [TestMethod]
+        public void Serializes_Simple_Attribute_By_Direct_Name()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeAType,
+                AttributeData = new { Attribute1 = "Test" }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.AreEqual("Test", result.Attribute1, "Attribute1's value was incorrect");
+        }
+
+        [TestMethod]
+        public void Serializes_Attribute_By_Xml_Name()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeAType,
+                AttributeData = new { Attribute2 = "Test" }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.AreEqual("Test", result.Attr2, "Attr2's value was incorrect");
         }
     }
 }
