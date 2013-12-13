@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xom.Core.Exceptions;
 using Xom.Core.Models;
 
 namespace Xom.Core
@@ -54,6 +55,10 @@ namespace Xom.Core
                 var targetProperty = targetProperties.FirstOrDefault(x => x.Name == xomAttribute.PropertyName);
                 if (targetProperty == null)
                     continue;
+
+                if (targetProperty.PropertyType != sourceProperty.PropertyType)
+                    throw new XomDataSerializationPropertyTypeMismatchException(sourceProperty.PropertyType, sourceProperty.Name, 
+                                                                                targetProperty.PropertyType, targetProperty.Name);
 
                 targetProperty.SetValue(target, sourceProperty.GetValue(data.AttributeData));
             }

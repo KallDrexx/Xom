@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Xom.Core;
 using Xom.Core.Models;
 using Xom.Tests.TestObjects.XomNodeData;
+using Xom.Core.Exceptions;
 
 namespace Xom.Tests
 {
@@ -91,6 +92,20 @@ namespace Xom.Tests
 
             var result = (NodeA)serializer.Serialize(data);
             Assert.AreEqual("Test", result.Attr2, "Attr2's value was incorrect");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(XomDataSerializationPropertyTypeMismatchException))]
+        public void Exception_Thrown_When_Attribute_Types_Dont_Match()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeAType,
+                AttributeData = new { Attribute2 = 1 }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
         }
     }
 }
