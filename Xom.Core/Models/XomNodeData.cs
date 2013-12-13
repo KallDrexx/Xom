@@ -9,7 +9,7 @@ namespace Xom.Core.Models
     public class XomNodeData
     {
         public XomNode NodeType { get; set; }
-        public XomNodeData[] ChildNodes { get; set; }
+        public KeyValuePair<string, XomNodeData>[] ChildNodes { get; set; }
         public object AttributeData { get; set; }
     }
 }

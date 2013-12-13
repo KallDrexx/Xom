@@ -15,6 +15,11 @@ namespace Xom.Core
     {
         public object Serialize(XomNodeData data)
         {
+            return SerializeNodeData(data, new KeyValuePair<object, string>(null, null));
+        }
+
+        private object SerializeNodeData(XomNodeData data, KeyValuePair<object, string> parent)
+        {
             if (data == null)
                 throw new ArgumentNullException("data");
 
@@ -24,9 +29,26 @@ namespace Xom.Core
             if (data.NodeType.Type == null)
                 throw new ArgumentException("Data object's xom node type has a null Type value");
 
-            var result = Activator.CreateInstance(data.NodeType.Type);
-            SerializeAttributeData(data, result);
-            return result;
+            var instance = Activator.CreateInstance(data.NodeType.Type);
+            SerializeAttributeData(data, instance);
+
+            // Attach the instance to the parent
+            if (parent.Key != null)
+            {
+                var parentProperty = parent.Key
+                                           .GetType()
+                                           .GetProperties()
+                                           .First(x => x.Name == parent.Value);
+
+                parentProperty.SetValue(parent.Key, instance);
+            }
+
+            // Serialize children
+            if (data.ChildNodes != null)
+                foreach (var childDataPair in data.ChildNodes)
+                    SerializeNodeData(childDataPair.Value, new KeyValuePair<object, string>(instance, childDataPair.Key));
+
+            return instance;
         }
 
         private void SerializeAttributeData(XomNodeData data, object target)

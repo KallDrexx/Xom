@@ -60,6 +60,7 @@
     <Compile Include="TestObjects\Nodes\MultipleTypedArrayItemNode.cs" />
     <Compile Include="TestObjects\Nodes\MultipleTypedElementNode.cs" />
     <Compile Include="TestObjects\Nodes\NodeWithPrivateSetterProperty.cs" />
+    <Compile Include="TestObjects\Nodes\NodeWithStringChild.cs" />
     <Compile Include="TestObjects\Nodes\XmlArrayItemChildWithSubtypeSetNode.cs" />
     <Compile Include="TestObjects\Nodes\ExplicitlyNamedXmlArrayNode.cs" />
     <Compile Include="TestObjects\Nodes\IgnoredChildNode.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="TestObjects\Nodes\XmlArrayChildNode.cs" />
     <Compile Include="TestObjects\Nodes\XmlElementChildWithSubtypeSetNode.cs" />
     <Compile Include="TestObjects\XomNodeData\NodeA.cs" />
+    <Compile Include="TestObjects\XomNodeData\NodeB.cs" />
     <Compile Include="XomAttributeTypeGeneratorTests.cs" />
     <Compile Include="XomDataSerializerTests.cs" />
     <Compile Include="XomReaderNodeWithCollectionsTests.cs" />

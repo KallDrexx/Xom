@@ -14,17 +14,6 @@ namespace Xom.Tests
     [TestClass]
     public class XomDataSerializerTests
     {
-        private readonly XomNode NodeAType = new XomNode
-        {
-            Type = typeof(NodeA),
-            IsRoot = true,
-            Attributes = new XomNodeAttribute[] 
-            {
-                new XomNodeAttribute { Name = "Attribute1", Type = typeof(string), PropertyName = "Attribute1"},
-                new XomNodeAttribute { Name = "Attribute2", Type = typeof(string), PropertyName = "Attr2"}
-            }
-        };
-
         [TestMethod]
         public void Creates_Correct_XML_Serialization_Object()
         {
@@ -72,7 +61,7 @@ namespace Xom.Tests
             var serializer = new XomDataSerializer();
             var data = new XomNodeData
             {
-                NodeType = NodeAType,
+                NodeType = NodeA.XomNode,
                 AttributeData = new { Attribute1 = "Test" }
             };
 
@@ -86,7 +75,7 @@ namespace Xom.Tests
             var serializer = new XomDataSerializer();
             var data = new XomNodeData
             {
-                NodeType = NodeAType,
+                NodeType = NodeA.XomNode,
                 AttributeData = new { Attribute2 = "Test" }
             };
 
@@ -101,11 +90,28 @@ namespace Xom.Tests
             var serializer = new XomDataSerializer();
             var data = new XomNodeData
             {
-                NodeType = NodeAType,
+                NodeType = NodeA.XomNode,
                 AttributeData = new { Attribute2 = 1 }
             };
 
             var result = (NodeA)serializer.Serialize(data);
+        }
+
+        [TestMethod]
+        public void Can_Create_Child_Node_With_Correct_Type_From_Data()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeA.XomNode,
+                ChildNodes = new KeyValuePair<string, XomNodeData>[]
+                {
+                    new KeyValuePair<string, XomNodeData>("Child1", new XomNodeData { NodeType = NodeB.XomNode })
+                }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.IsNotNull(result.Child1, "Child1 was incorrectly null");
         }
     }
 }
