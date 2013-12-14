@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xom.Core.Exceptions;
+using Xom.Core.InternalModels;
 using Xom.Core.Models;
 
 namespace Xom.Core
@@ -15,10 +16,10 @@ namespace Xom.Core
     {
         public object Serialize(XomNodeData data)
         {
-            return SerializeNodeData(data, new KeyValuePair<object, string>(null, null));
+            return SerializeNodeData(data, null);
         }
 
-        private object SerializeNodeData(XomNodeData data, KeyValuePair<object, string> parent)
+        private object SerializeNodeData(XomNodeData data, DataSerializerParentDetails parentDetails)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -33,20 +34,35 @@ namespace Xom.Core
             SerializeAttributeData(data, instance);
 
             // Attach the instance to the parent
-            if (parent.Key != null)
+            if (parentDetails != null)
             {
-                var parentProperty = parent.Key
-                                           .GetType()
-                                           .GetProperties()
-                                           .First(x => x.Name == parent.Value);
+                var xomChildDetails = parentDetails.ParentXomNode
+                                                   .Children
+                                                   .First(x => x.AvailableNodes.Any(y => y.Key == parentDetails.ChildNodeName));
 
-                parentProperty.SetValue(parent.Key, instance);
+                var parentProperty = parentDetails.ParentObject
+                                                  .GetType()
+                                                  .GetProperties()
+                                                  .First(x => x.Name == xomChildDetails.PropertyName);
+
+                parentProperty.SetValue(parentDetails.ParentObject, instance);
             }
 
             // Serialize children
             if (data.ChildNodes != null)
+            {
                 foreach (var childDataPair in data.ChildNodes)
-                    SerializeNodeData(childDataPair.Value, new KeyValuePair<object, string>(instance, childDataPair.Key));
+                {
+                    var details = new DataSerializerParentDetails
+                    {
+                        ParentObject = instance,
+                        ParentXomNode = data.NodeType,
+                        ChildNodeName = childDataPair.Key
+                    };
+
+                    SerializeNodeData(childDataPair.Value, details);
+                }
+            }
 
             return instance;
         }

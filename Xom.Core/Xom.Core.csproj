@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\XomDataSerializationException.cs" />
     <Compile Include="Exceptions\XomDataSerializationPropertyTypeMismatchException.cs" />
+    <Compile Include="InternalModels\DataSerializerParentDetails.cs" />
     <Compile Include="Models\XomNode.cs" />
     <Compile Include="Models\XomNodeAttribute.cs" />
     <Compile Include="Models\XomNodeChild.cs" />

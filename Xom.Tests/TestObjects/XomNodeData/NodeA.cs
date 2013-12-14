@@ -30,7 +30,8 @@ namespace Xom.Tests.TestObjects.XomNodeData
                     PropertyName = "Child1",
                     AvailableNodes = new Dictionary<string,XomNode>
                     {
-                        {"Child1", NodeB.XomNode}
+                        {"Child1", NodeB.XomNode},
+                        {"C1", NodeB.XomNode}
                     }
                 }
             }

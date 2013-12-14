@@ -113,5 +113,22 @@ namespace Xom.Tests
             var result = (NodeA)serializer.Serialize(data);
             Assert.IsNotNull(result.Child1, "Child1 was incorrectly null");
         }
+
+        [TestMethod]
+        public void Can_Create_Child_Node_With_Name_Not_Matching_Property_Name()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeA.XomNode,
+                ChildNodes = new KeyValuePair<string, XomNodeData>[]
+                {
+                    new KeyValuePair<string, XomNodeData>("C1", new XomNodeData { NodeType = NodeB.XomNode })
+                }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.IsNotNull(result.Child1, "Child1 was incorrectly null");
+        }
     }
 }
