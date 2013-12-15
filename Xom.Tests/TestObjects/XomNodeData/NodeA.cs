@@ -12,6 +12,7 @@ namespace Xom.Tests.TestObjects.XomNodeData
     {
         public string Attribute1 { get; set; }
         public string Attr2 { get; set; }
+        public int Attribute3 { get; set; }
         public NodeB Child1 { get; set; }
 
         public static readonly XomNode XomNode = new XomNode
@@ -21,7 +22,8 @@ namespace Xom.Tests.TestObjects.XomNodeData
             Attributes = new XomNodeAttribute[] 
             {
                 new XomNodeAttribute { Name = "Attribute1", Type = typeof(string), PropertyName = "Attribute1"},
-                new XomNodeAttribute { Name = "Attribute2", Type = typeof(string), PropertyName = "Attr2"}
+                new XomNodeAttribute { Name = "Attribute2", Type = typeof(string), PropertyName = "Attr2"},
+                new XomNodeAttribute { Name = "Attribute3", Type = typeof(int), PropertyName = "Attribute3"}
             },
             Children = new XomNodeChild[] 
             {

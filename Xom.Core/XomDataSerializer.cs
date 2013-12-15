@@ -94,7 +94,11 @@ namespace Xom.Core
                 if (targetProperty == null)
                     continue;
 
-                if (targetProperty.PropertyType != sourceProperty.PropertyType)
+                var sourcePropertyType = sourceProperty.PropertyType;
+                if (sourcePropertyType.IsGenericType && sourcePropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    sourcePropertyType = Nullable.GetUnderlyingType(sourcePropertyType);
+
+                if (targetProperty.PropertyType != sourcePropertyType)
                     throw new XomDataSerializationPropertyTypeMismatchException(sourceProperty.PropertyType, sourceProperty.Name, 
                                                                                 targetProperty.PropertyType, targetProperty.Name);
 

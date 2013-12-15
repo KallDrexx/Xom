@@ -130,5 +130,20 @@ namespace Xom.Tests
             var result = (NodeA)serializer.Serialize(data);
             Assert.IsNotNull(result.Child1, "Child1 was incorrectly null");
         }
+
+        [TestMethod]
+        public void Can_Set_Nullable_Attribute_Source_To_Non_Nullable_Target()
+        {
+            const int testValue = 5;
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeA.XomNode,
+                AttributeData = new { Attribute3 = (int?)testValue }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.AreEqual(testValue, result.Attribute3, "Attribute3 had an incorrect value");
+        }
     }
 }
