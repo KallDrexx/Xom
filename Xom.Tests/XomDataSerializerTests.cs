@@ -145,5 +145,19 @@ namespace Xom.Tests
             var result = (NodeA)serializer.Serialize(data);
             Assert.AreEqual(testValue, result.Attribute3, "Attribute3 had an incorrect value");
         }
+
+        [TestMethod]
+        public void Nullable_Attribute_Source_That_Has_Null_Value_Is_Ignored()
+        {
+            var serializer = new XomDataSerializer();
+            var data = new XomNodeData
+            {
+                NodeType = NodeA.XomNode,
+                AttributeData = new { Attribute3 = (int?)null }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.AreEqual(0, result.Attribute3, "Attribute3 had an incorrect value");
+        }
     }
 }
