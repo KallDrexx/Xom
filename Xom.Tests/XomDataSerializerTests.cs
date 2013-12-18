@@ -158,6 +158,7 @@ namespace Xom.Tests
 
             var result = (NodeA)serializer.Serialize(data);
             Assert.AreEqual(0, result.Attribute3, "Attribute3 had an incorrect value");
+            Assert.IsFalse(result.Attribute3Set, "Attribute3's value was set when it shouldn't have been");
         }
 
         [TestMethod]

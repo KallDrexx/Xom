@@ -10,11 +10,23 @@ namespace Xom.Tests.TestObjects.XomNodeData
 {
     class NodeA
     {
+        private int _attribute3 { get; set; }
+
         public string Attribute1 { get; set; }
         public string Attr2 { get; set; }
-        public int Attribute3 { get; set; }
         public NodeB Child1 { get; set; }
         public List<NodeB> CollectionChildren { get; set; }
+        public bool Attribute3Set { get; set; }
+
+        public int Attribute3
+        {
+            get { return _attribute3; }
+            set 
+            { 
+                _attribute3 = value;
+                Attribute3Set = true;
+            }
+        }
 
         public static readonly XomNode XomNode = new XomNode
         {

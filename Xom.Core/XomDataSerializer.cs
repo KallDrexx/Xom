@@ -133,7 +133,11 @@ namespace Xom.Core
                     throw new XomDataSerializationPropertyTypeMismatchException(sourceProperty.PropertyType, sourceProperty.Name, 
                                                                                 targetProperty.PropertyType, targetProperty.Name);
 
-                targetProperty.SetValue(target, sourceProperty.GetValue(data.AttributeData));
+                // If the data value is null, don't call setValue() as the property would already be null.
+                // If this isn't done, the properties will have default(T) set as its value, and 
+                // the ValueSpecified values will be triggered to be true.
+                if (sourceProperty.GetValue(data.AttributeData) != null)
+                    targetProperty.SetValue(target, sourceProperty.GetValue(data.AttributeData));
             }
         }
 
