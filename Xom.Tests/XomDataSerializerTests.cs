@@ -159,5 +159,28 @@ namespace Xom.Tests
             var result = (NodeA)serializer.Serialize(data);
             Assert.AreEqual(0, result.Attribute3, "Attribute3 had an incorrect value");
         }
+
+        [TestMethod]
+        public void Can_Serialize_IEnumerable_Data_Nodes_Into_Xml_Object_Collection()
+        {
+            var serializer = new XomDataSerializer();
+            var innerData1 = new XomNodeData
+            {
+                NodeType = NodeB.XomNode
+            };
+
+            var data = new XomNodeData
+            {
+                NodeType = NodeA.XomNode,
+                ChildNodes = new KeyValuePair<string, XomNodeData>[]
+                {
+                    new KeyValuePair<string, XomNodeData>("CollectionChildren", innerData1),
+                    new KeyValuePair<string, XomNodeData>("CollectionChildren", innerData1)
+                }
+            };
+
+            var result = (NodeA)serializer.Serialize(data);
+            Assert.AreEqual(2, result.CollectionChildren.Count, "Incorrect number of elements in the collection children node");
+        }
     }
 }

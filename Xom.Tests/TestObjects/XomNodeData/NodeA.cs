@@ -14,6 +14,7 @@ namespace Xom.Tests.TestObjects.XomNodeData
         public string Attr2 { get; set; }
         public int Attribute3 { get; set; }
         public NodeB Child1 { get; set; }
+        public List<NodeB> CollectionChildren { get; set; }
 
         public static readonly XomNode XomNode = new XomNode
         {
@@ -34,6 +35,15 @@ namespace Xom.Tests.TestObjects.XomNodeData
                     {
                         {"Child1", NodeB.XomNode},
                         {"C1", NodeB.XomNode}
+                    }
+                },
+                new XomNodeChild
+                {
+                    PropertyName = "CollectionChildren",
+                    IsCollection = true,
+                    AvailableNodes = new Dictionary<string,XomNode>
+                    {
+                        {"CollectionChildren", NodeB.XomNode}
                     }
                 }
             }

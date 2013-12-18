@@ -9,9 +9,15 @@ namespace Xom.Tests.TestObjects.XomNodeData
 {
     class NodeB
     {
+        public string Attribute1 { get; set; }
+
         public static readonly XomNode XomNode = new XomNode
         {
-            Type = typeof(NodeB)
+            Type = typeof(NodeB),
+            Attributes = new XomNodeAttribute[] 
+            {
+                new XomNodeAttribute { Name = "Attribute1", Type = typeof(string), PropertyName = "Attribute1"}
+            }
         };
     }
 }

@@ -34,19 +34,7 @@ namespace Xom.Core
             SerializeAttributeData(data, instance);
 
             // Attach the instance to the parent
-            if (parentDetails != null)
-            {
-                var xomChildDetails = parentDetails.ParentXomNode
-                                                   .Children
-                                                   .First(x => x.AvailableNodes.Any(y => y.Key == parentDetails.ChildNodeName));
-
-                var parentProperty = parentDetails.ParentObject
-                                                  .GetType()
-                                                  .GetProperties()
-                                                  .First(x => x.Name == xomChildDetails.PropertyName);
-
-                parentProperty.SetValue(parentDetails.ParentObject, instance);
-            }
+            AttachNodeToParent(parentDetails, instance);
 
             // Serialize children
             if (data.ChildNodes != null)
@@ -65,6 +53,49 @@ namespace Xom.Core
             }
 
             return instance;
+        }
+
+        private void AttachNodeToParent(DataSerializerParentDetails parentDetails, object instance)
+        {
+            if (parentDetails == null)
+                return;
+            
+            var xomChildDetails = parentDetails.ParentXomNode
+                                                .Children
+                                                .First(x => x.AvailableNodes.Any(y => y.Key == parentDetails.ChildNodeName));
+
+            var parentProperty = parentDetails.ParentObject
+                                                .GetType()
+                                                .GetProperties()
+                                                .First(x => x.Name == xomChildDetails.PropertyName);
+
+            // If the parent property is a collection, instantiate it if it hasn't been already,
+            // then add this element to the collection
+            var propertyType = parentProperty.PropertyType;
+            if (propertyType.IsGenericType && TypeIsCollection(propertyType))
+            {
+                var collection = parentProperty.GetValue(parentDetails.ParentObject);
+                if (collection == null)
+                {
+                    collection = Activator.CreateInstance(propertyType);
+                    parentProperty.SetValue(parentDetails.ParentObject, collection);
+                }
+
+                // Since we know this inherits from ICollection<>, find the Add method
+                var addMethod = collection.GetType()
+                                          .GetMethods()
+                                          .Where(x => x.Name == "Add")
+                                          .Where(x => x.GetParameters().Length == 1)
+                                          .Where(x => x.GetParameters()[0].ParameterType == propertyType.GetGenericArguments()[0])
+                                          .First();
+
+                addMethod.Invoke(collection, new[] {instance});
+            }
+            else
+            {
+                parentProperty.SetValue(parentDetails.ParentObject, instance);
+            }
+            
         }
 
         private void SerializeAttributeData(XomNodeData data, object target)
@@ -104,6 +135,14 @@ namespace Xom.Core
 
                 targetProperty.SetValue(target, sourceProperty.GetValue(data.AttributeData));
             }
+        }
+
+        private bool TypeIsCollection(Type type)
+        {
+            return type.GetInterfaces()
+                       .Where(x => x.IsGenericType)
+                       .Where(x => x.GetGenericTypeDefinition() == typeof(ICollection<>))
+                       .Any();
         }
     }
 }
