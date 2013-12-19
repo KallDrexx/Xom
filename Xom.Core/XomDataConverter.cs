@@ -12,14 +12,14 @@ namespace Xom.Core
     /// <summary>
     /// Serializes XomDataNodes into xml serialization objects
     /// </summary>
-    public class XomDataSerializer
+    public class XomDataConverter
     {
-        public object Serialize(XomNodeData data)
+        public object ConvertToXmlObject(XomNodeData data)
         {
-            return SerializeNodeData(data, null);
+            return GenerateXmlObjectForNodeData(data, null);
         }
 
-        private object SerializeNodeData(XomNodeData data, DataSerializerParentDetails parentDetails)
+        private object GenerateXmlObjectForNodeData(XomNodeData data, DataSerializerParentDetails parentDetails)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -31,7 +31,7 @@ namespace Xom.Core
                 throw new ArgumentException("Data object's xom node type has a null Type value");
 
             var instance = Activator.CreateInstance(data.NodeType.Type);
-            SerializeAttributeData(data, instance);
+            AttachAttributeDataToXmlObject(data, instance);
 
             // Attach the instance to the parent
             AttachNodeToParent(parentDetails, instance);
@@ -48,7 +48,7 @@ namespace Xom.Core
                         ChildNodeName = childDataPair.Key
                     };
 
-                    SerializeNodeData(childDataPair.Value, details);
+                    GenerateXmlObjectForNodeData(childDataPair.Value, details);
                 }
             }
 
@@ -98,7 +98,7 @@ namespace Xom.Core
             
         }
 
-        private void SerializeAttributeData(XomNodeData data, object target)
+        private void AttachAttributeDataToXmlObject(XomNodeData data, object target)
         {
             if (data.AttributeData == null)
                 return;

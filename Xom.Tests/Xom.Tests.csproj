@@ -75,7 +75,7 @@
     <Compile Include="TestObjects\XomNodeData\NodeA.cs" />
     <Compile Include="TestObjects\XomNodeData\NodeB.cs" />
     <Compile Include="XomAttributeTypeGeneratorTests.cs" />
-    <Compile Include="XomDataSerializerTests.cs" />
+    <Compile Include="XomDataConverterToXmlObjectTests.cs" />
     <Compile Include="XomReaderNodeWithCollectionsTests.cs" />
     <Compile Include="XomReaderNodeTests.cs" />
     <Compile Include="XomReaderAttributeTests.cs" />
