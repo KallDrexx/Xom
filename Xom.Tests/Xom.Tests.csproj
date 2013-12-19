@@ -40,6 +40,9 @@
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Telerik.JustMock">
+      <HintPath>C:\Program Files (x86)\Telerik\JustMock\Libraries\Telerik.JustMock.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -75,6 +78,7 @@
     <Compile Include="TestObjects\XomNodeData\NodeA.cs" />
     <Compile Include="TestObjects\XomNodeData\NodeB.cs" />
     <Compile Include="XomAttributeTypeGeneratorTests.cs" />
+    <Compile Include="XomDataConverterFromXmlTests.cs" />
     <Compile Include="XomDataConverterToXmlObjectTests.cs" />
     <Compile Include="XomReaderNodeWithCollectionsTests.cs" />
     <Compile Include="XomReaderNodeTests.cs" />
