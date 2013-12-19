@@ -19,7 +19,7 @@ namespace Xom.Core
             return GenerateXmlObjectForNodeData(data, null);
         }
 
-        public XomNodeData ConvertToXomNodeData(object xmlObject, XomReader xomReader)
+        public XomNodeData ConvertToXomNodeData(object xmlObject, IXomReader xomReader)
         {
             if (xomReader == null)
                 throw new ArgumentNullException("xomReader");

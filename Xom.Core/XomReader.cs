@@ -8,7 +8,7 @@ using Xom.Core.Models;
 
 namespace Xom.Core
 {
-    public class XomReader
+    public class XomReader : IXomReader
     {
         public IEnumerable<XomNode> GenerateNodes(Type type)
         {

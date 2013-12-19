@@ -15,14 +15,14 @@ namespace Xom.Tests
     [TestClass]
     public class XomDataConverterFromXmlTests
     {
-        private XomReader _xomReader;
+        private IXomReader _xomReader;
 
         [TestInitialize]
         public void Setup()
         {
             var allXomNodes = new[] { NodeA.XomNode, NodeB.XomNode };
             var onlyNodeBXomNode = new[] { NodeB.XomNode };
-            _xomReader = Mock.Create<XomReader>();
+            _xomReader = Mock.Create<IXomReader>();
             Mock.Arrange(() => _xomReader.GenerateNodes(typeof(NodeA))).Returns(allXomNodes);
             Mock.Arrange(() => _xomReader.GenerateNodes(typeof(NodeB))).Returns(onlyNodeBXomNode);
         }
