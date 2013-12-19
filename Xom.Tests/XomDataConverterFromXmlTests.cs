@@ -20,7 +20,11 @@ namespace Xom.Tests
         [TestInitialize]
         public void Setup()
         {
+            var allXomNodes = new[] { NodeA.XomNode, NodeB.XomNode };
+            var onlyNodeBXomNode = new[] { NodeB.XomNode };
             _xomReader = Mock.Create<XomReader>();
+            Mock.Arrange(() => _xomReader.GenerateNodes(typeof(NodeA))).Returns(allXomNodes);
+            Mock.Arrange(() => _xomReader.GenerateNodes(typeof(NodeB))).Returns(onlyNodeBXomNode);
         }
 
         [TestMethod]
@@ -48,6 +52,16 @@ namespace Xom.Tests
             var inputObject = new object();
             var converter = new XomDataConverter();
             converter.ConvertToXomNodeData(inputObject, null);
+        }
+
+        [TestMethod]
+        public void Returned_NodeData_Contains_Correct_NodeType()
+        {
+            var converter = new XomDataConverter();
+            var xmlObject = new NodeA();
+
+            var nodeData = converter.ConvertToXomNodeData(xmlObject, _xomReader);
+            Assert.AreEqual(NodeA.XomNode, nodeData.NodeType, "Resulting NodeType was incorrect");
         }
     }
 }

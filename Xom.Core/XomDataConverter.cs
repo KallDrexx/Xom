@@ -27,7 +27,13 @@ namespace Xom.Core
             if (xmlObject == null)
                 return null;
 
-            var result = new XomNodeData();
+            var nodeTypes = xomReader.GenerateNodes(xmlObject.GetType());
+
+            var result = new XomNodeData
+            {
+                NodeType = nodeTypes.FirstOrDefault(x => x.Type == xmlObject.GetType())
+            };
+
             return result;
         }
 
