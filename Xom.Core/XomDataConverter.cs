@@ -29,9 +29,30 @@ namespace Xom.Core
 
             var nodeTypes = xomReader.GenerateNodes(xmlObject.GetType());
 
+            var nodeType = nodeTypes.FirstOrDefault(x => x.Type == xmlObject.GetType());
+            var attributeType = XomAttributeTypeGenerator.GenerateType(nodeType.Attributes);
+            var attributeObject = Activator.CreateInstance(attributeType);
+
+            // Migrate the attribute data from the xmlObject to the XomNodeData.AttributeData
+            foreach (var attribute in nodeType.Attributes)
+            {
+                var sourceValue = xmlObject.GetType()
+                                           .GetProperties()
+                                           .Where(x => x.Name == attribute.PropertyName)
+                                           .Select(x => x.GetValue(xmlObject, null))
+                                           .First();
+
+                var targetPropertyInfo = attributeType.GetProperties()
+                                                      .Where(x => x.Name == attribute.Name)
+                                                      .First();
+
+                targetPropertyInfo.SetValue(attributeObject, sourceValue);
+            }
+
             var result = new XomNodeData
             {
-                NodeType = nodeTypes.FirstOrDefault(x => x.Type == xmlObject.GetType())
+                NodeType = nodeType,
+                AttributeData = attributeObject
             };
 
             return result;

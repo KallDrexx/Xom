@@ -63,5 +63,30 @@ namespace Xom.Tests
             var nodeData = converter.ConvertToXomNodeData(xmlObject, _xomReader);
             Assert.AreEqual(NodeA.XomNode, nodeData.NodeType, "Resulting NodeType was incorrect");
         }
+
+        [TestMethod]
+        public void Returned_NodeData_Object_Contains_Correct_Attributes()
+        {
+            const string expectedAttributeName = "Attribute1";
+            const string expectedAttributeValue = "Test1";
+
+            var converter = new XomDataConverter();
+            var xmlObject = new NodeA
+            {
+                Attribute1 = expectedAttributeValue
+            };
+
+            var nodeData = converter.ConvertToXomNodeData(xmlObject, _xomReader);
+            Assert.IsNotNull(nodeData.AttributeData, "Nodes attribute data was null");
+
+            var propertyValue = nodeData.AttributeData
+                                        .GetType()
+                                        .GetProperties()
+                                        .Where(x => x.Name == expectedAttributeName)
+                                        .Select(x => x.GetValue(nodeData.AttributeData, null))
+                                        .FirstOrDefault();
+
+            Assert.AreEqual(expectedAttributeValue, propertyValue, "Node's Attribute1 value was incorrect");
+        }
     }
 }
