@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,8 +29,14 @@ namespace Xom.Core
                 return null;
 
             var nodeTypes = xomReader.GenerateNodes(xmlObject.GetType());
+            var result = GenerateXomNodeDataObject(xmlObject, nodeTypes);
 
-            var nodeType = nodeTypes.FirstOrDefault(x => x.Type == xmlObject.GetType());
+            return result;
+        }
+
+        private XomNodeData GenerateXomNodeDataObject(object xmlObject, IEnumerable<XomNode> nodeTypes)
+        {
+            var nodeType = nodeTypes.First(x => x.Type == xmlObject.GetType());
             var attributeType = XomAttributeTypeGenerator.GenerateType(nodeType.Attributes);
             var attributeObject = Activator.CreateInstance(attributeType);
 
@@ -52,8 +59,50 @@ namespace Xom.Core
             var result = new XomNodeData
             {
                 NodeType = nodeType,
-                AttributeData = attributeObject
+                AttributeData = attributeObject,
             };
+
+            var childNodes = new List<KeyValuePair<string, XomNodeData>>();
+
+            // Add child elements
+            if (nodeType.Children != null)
+            {
+                foreach (var child in nodeType.Children)
+                {
+                    var propertyInfo = xmlObject.GetType()
+                                                .GetProperties()
+                                                .Where(x => x.Name == child.PropertyName)
+                                                .First();
+
+                    var propertyValue = propertyInfo.GetValue(xmlObject, null);
+                    if (propertyValue != null)
+                    {
+                        // If the property's value is an enumerable, create XomNodeData objects
+                        // for the objects in the collection
+                        if (propertyValue.GetType().IsGenericType)
+                        {
+                            var enumerable = propertyValue as IEnumerable;
+                            if (enumerable != null)
+                            {
+                                foreach (object item in enumerable)
+                                {
+                                    var nodeData = GenerateXomNodeDataObject(item, nodeTypes);
+                                    var pair = new KeyValuePair<string, XomNodeData>(child.PropertyName, nodeData);
+                                    childNodes.Add(pair);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var nodeData = GenerateXomNodeDataObject(propertyValue, nodeTypes);
+                            var pair = new KeyValuePair<string, XomNodeData>(child.PropertyName, nodeData);
+                            childNodes.Add(pair);
+                        }                        
+                    }
+                }
+            }
+
+            result.ChildNodes = childNodes.ToArray();
 
             return result;
         }

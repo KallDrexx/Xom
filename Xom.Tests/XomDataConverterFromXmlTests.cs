@@ -88,5 +88,25 @@ namespace Xom.Tests
 
             Assert.AreEqual(expectedAttributeValue, propertyValue, "Node's Attribute1 value was incorrect");
         }
+
+        [TestMethod]
+        public void Returned_NodeData_Object_Contains_Child_Data()
+        {
+            var converter = new XomDataConverter();
+            var xmlObject = new NodeA
+            {
+                Child1 = new NodeB(),
+                CollectionChildren = new List<NodeB>()
+                {
+                    new NodeB()
+                }
+            };
+
+            var nodeData = converter.ConvertToXomNodeData(xmlObject, _xomReader);
+            Assert.IsNotNull(nodeData.ChildNodes, "Returned data did not have children");
+            Assert.AreEqual(2, nodeData.ChildNodes.Length, "Returned data had an incorrect number of children");
+            Assert.IsTrue(nodeData.ChildNodes.Any(x => x.Key == "Child1" && x.Value != null), "Returned data did not have a 'Child1' child that wasn't null");
+            Assert.IsTrue(nodeData.ChildNodes.Any(x => x.Key == "CollectionChildren" && x.Value != null), "Returned data did not have a 'Child1' child that wasn't null");
+        }
     }
 }
